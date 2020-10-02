@@ -25,7 +25,7 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void createUsersTable() {
         Session session = null;
-        Transaction transaction;
+        Transaction transaction = null;
         try {
             session = factory.openSession();
             transaction = session.beginTransaction();
@@ -37,6 +37,9 @@ public class UserDaoHibernateImpl implements UserDao {
                     "primary key (id))").executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
+            if(transaction != null) {
+                transaction.rollback();
+            }
             System.out.println(e.getMessage());
         } finally {
             if (session != null) {
@@ -48,13 +51,16 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void dropUsersTable() {
         Session session = null;
-        Transaction transaction;
+        Transaction transaction = null;
         try {
             session = factory.openSession();
             transaction = session.beginTransaction();
             session.createSQLQuery("drop table if exists users").executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
+            if(transaction != null) {
+                transaction.rollback();
+            }
             System.out.println(e.getMessage());
         } finally {
             if (session != null) {
@@ -66,13 +72,16 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void saveUser(String name, String lastName, byte age) {
         Session session = null;
-        Transaction transaction;
+        Transaction transaction = null;
         try {
             session = factory.openSession();
             transaction = session.beginTransaction();
             session.save(new User(name, lastName, age));
             transaction.commit();
         } catch (HibernateException e) {
+            if(transaction != null) {
+                transaction.rollback();
+            }
             System.out.println(e.getMessage());
         } finally {
             if (session != null) {
@@ -84,13 +93,16 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void removeUserById(long id) {
         Session session = null;
-        Transaction transaction;
+        Transaction transaction = null;
         try {
             session = factory.openSession();
             transaction = session.beginTransaction();
             session.createSQLQuery("delete from users where id = " + id).executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
+            if(transaction != null) {
+                transaction.rollback();
+            }
             System.out.println(e.getMessage());
         } finally {
             if (session != null) {
@@ -103,7 +115,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public List<User> getAllUsers() {
         List<User> users = null;
         Session session = null;
-        Transaction transaction;
+        Transaction transaction = null;
         try {
             session = factory.openSession();
             transaction = session.beginTransaction();
@@ -111,6 +123,9 @@ public class UserDaoHibernateImpl implements UserDao {
             users = (List<User>) query.list();
             transaction.commit();
         } catch (HibernateException e) {
+            if(transaction != null) {
+                transaction.rollback();
+            }
             System.out.println(e.getMessage());
         } finally {
             if (session != null) {
@@ -123,13 +138,16 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void cleanUsersTable() {
         Session session = null;
-        Transaction transaction;
+        Transaction transaction = null;
         try {
             session = factory.openSession();
             transaction = session.beginTransaction();
             session.createSQLQuery("delete from users").executeUpdate();
             transaction.commit();
         } catch (HibernateException e) {
+            if(transaction != null) {
+                transaction.rollback();
+            }
             System.out.println(e.getMessage());
         } finally {
             if (session != null) {
